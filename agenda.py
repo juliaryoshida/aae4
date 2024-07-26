@@ -22,6 +22,21 @@ class Agenda:
         self.eventos.append(evento)
         return True
 
+    def remover_evento(self, nome):
+        eventos_filtrados = [evento for evento in self.eventos if evento.nome != nome]
+        if len(eventos_filtrados) == len(self.eventos):
+            return False  # Nenhum evento removido
+        self.eventos = eventos_filtrados
+        return True
+
+    def mostrar_agenda(self):
+        if not self.eventos:
+            return "Nenhum evento agendado."
+        return "\n".join(
+            [f"{evento.nome}: {evento.inicio.strftime('%Y-%m-%d %H:%M')} a {evento.fim.strftime('%Y-%m-%d %H:%M')}"
+             for evento in self.eventos]
+        )
+
 def main():
     agenda = Agenda()
     
@@ -46,7 +61,7 @@ def main():
                     print("Conflito de agendamento detectado. Evento não adicionado.")
             except ValueError:
                 print("Formato de data e hora inválido. Tente novamente.")
-        
+
         elif escolha == "2":
             if agenda.eventos:
                 print("\nEventos na agenda:")
@@ -54,11 +69,11 @@ def main():
                     print(f"{e.nome}: {e.inicio} - {e.fim}")
             else:
                 print("Nenhum evento na agenda.")
-        
+
         elif escolha == "3":
             print("Saindo...")
             break
-        
+
         else:
             print("Opção inválida. Tente novamente.")
 

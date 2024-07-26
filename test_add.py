@@ -1,5 +1,4 @@
 import unittest
-from datetime import datetime
 from agenda import Evento, Agenda
 
 class TestAgenda(unittest.TestCase):
@@ -39,6 +38,33 @@ class TestAgenda(unittest.TestCase):
         resultado = self.agenda.adicionar_evento(evento2)
         self.assertTrue(resultado, "O evento deveria ser adicionado com sucesso, pois não há conflito.")
         self.assertEqual(len(self.agenda.eventos), 2, "Deveria haver dois eventos na agenda.")
+
+    def test_remover_evento_existente(self):
+        evento = self.criar_evento("Final dos 100m", "2024-07-24 10:00", "2024-07-24 11:00")
+        self.agenda.adicionar_evento(evento)
+        resultado = self.agenda.remover_evento(evento.nome)
+        self.assertTrue(resultado, "O evento deveria ser removido com sucesso.")
+        self.assertEqual(len(self.agenda.eventos), 0, "Não deveria haver nenhum evento na agenda.")
+
+    def test_remover_evento_inexistente(self):
+        evento = self.criar_evento("Final dos 100m", "2024-07-24 10:00", "2024-07-24 11:00")
+        self.agenda.adicionar_evento(evento)
+        resultado = self.agenda.remover_evento("Final dos 200m")
+        self.assertFalse(resultado, "Nenhum evento deveria ser removido.")
+        self.assertEqual(len(self.agenda.eventos), 1, "Deveria haver um evento na agenda.")
+
+    def test_mostrar_agenda_com_eventos(self):
+        evento1 = self.criar_evento("Final dos 100m", "2024-07-24 10:00", "2024-07-24 11:00")
+        evento2 = self.criar_evento("Final dos 200m", "2024-07-24 12:00", "2024-07-24 13:00")
+        self.agenda.adicionar_evento(evento1)
+        self.agenda.adicionar_evento(evento2)
+        agenda_str = self.agenda.mostrar_agenda()
+        self.assertIn("Final dos 100m: 2024-07-24 10:00 a 2024-07-24 11:00", agenda_str)
+        self.assertIn("Final dos 200m: 2024-07-24 12:00 a 2024-07-24 13:00", agenda_str)
+
+    def test_mostrar_agenda_sem_eventos(self):
+        agenda_str = self.agenda.mostrar_agenda()
+        self.assertEqual(agenda_str, "Nenhum evento agendado.", "A agenda deveria estar vazia.")
 
 if __name__ == '__main__':
     unittest.main()
