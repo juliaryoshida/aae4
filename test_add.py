@@ -66,5 +66,43 @@ class TestAgenda(unittest.TestCase):
         agenda_str = self.agenda.mostrar_agenda()
         self.assertEqual(agenda_str, "Nenhum evento agendado.", "A agenda deveria estar vazia.")
 
+    def test_formato_data_invalido(self):
+        escolha = "1"
+        inicio = "24-07-2024 11:00"
+        fim = "2024-07-24 11:00"
+        res = self.agenda.entrada_invalida(escolha, "Evento Invalido", inicio, fim)
+        self.assertEqual(res, "Formato de data inválido")
+
+        escolha = "1"
+        inicio = "2024-07-24 11:00"
+        fim = "24-07-2024 11:00"
+        res = self.agenda.entrada_invalida(escolha, "Evento Invalido", inicio, fim)
+        self.assertEqual(res, "Formato de data inválido")
+    
+    def test_evento_sem_data_de_inicio(self):
+        escolha = "1"
+        inicio = ""
+        fim = "2024-07-24 11:00"
+        res = self.agenda.entrada_invalida(escolha, "Evento Incompleto", inicio, fim)
+        self.assertEqual(res, "Data e hora de início e fim são obrigatórios.")
+    
+    def test_evento_sem_data_de_fim(self):
+        escolha = "1"
+        inicio = "2024-07-24 10:00"
+        fim = ""
+        res = self.agenda.entrada_invalida(escolha, "Evento Incompleto", inicio, fim)
+        self.assertEqual(res, "Data e hora de início e fim são obrigatórios.")
+    
+    def test_acao_invalida(self):
+        escolha = "5"
+        inicio = None
+        fim = None
+        res = self.agenda.entrada_invalida(escolha, "Evento Válido", inicio, fim)
+        self.assertEqual(res, "Opção inválida.")
+
+    def test_sai_do_app(self):
+        res = self.agenda.encerra()
+        self.assertEqual(res, "A agenda foi encerrada")
+
 if __name__ == '__main__':
     unittest.main()

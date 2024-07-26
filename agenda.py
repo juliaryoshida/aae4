@@ -36,6 +36,24 @@ class Agenda:
             [f"{evento.nome}: {evento.inicio.strftime('%Y-%m-%d %H:%M')} a {evento.fim.strftime('%Y-%m-%d %H:%M')}"
              for evento in self.eventos]
         )
+    
+    def entrada_invalida(self, escolha, nome, inicio, fim):
+        if escolha not in ["1", "2", "3"]:
+            return "Opção inválida."
+        
+        if not inicio or not fim:
+            return "Data e hora de início e fim são obrigatórios."
+
+        formato = "%Y-%m-%d %H:%M"
+        try:
+            datetime.strptime(inicio, formato)
+            datetime.strptime(fim, formato)
+        except ValueError:
+            return "Formato de data inválido"
+        
+    def encerra(self):
+        return "A agenda foi encerrada"
+
 
 def main():
     agenda = Agenda()
@@ -53,6 +71,8 @@ def main():
             inicio = input("Digite a data e hora de início (YYYY-MM-DD HH:MM): ")
             fim = input("Digite a data e hora de término (YYYY-MM-DD HH:MM): ")
             
+            agenda.entrada_invalida(escolha, nome, inicio, fim)
+
             try:
                 evento = Evento(nome, inicio, fim)
                 if agenda.adicionar_evento(evento):
@@ -71,11 +91,11 @@ def main():
                 print("Nenhum evento na agenda.")
 
         elif escolha == "3":
-            print("Saindo...")
+            print(agenda.encerra())
             break
 
         else:
-            print("Opção inválida. Tente novamente.")
+            agenda.entrada_invalida(escolha, "", "", "")
 
 if __name__ == "__main__":
     main()
